@@ -175,7 +175,8 @@ while running:
                         state["score"] += 150 if e["is_boss"] else 10
                     break
 
-        if state["killed"] >= total_enemy:
+        # ===== FIX WAVE CLEAR =====
+        if state["spawned"] >= total_enemy and len(state["enemies"]) == 0:
             if state["wave"] < MAX_WAVE:
                 state["wave"] += 1
                 state["spawned"] = 0
@@ -220,7 +221,7 @@ while running:
     screen.blit(font.render("HP", True, (255,255,255)), (10, 30))
     screen.blit(font.render(f"Score: {state['score']}", True, (255,255,255)), (10, 75))
 
-    # ===== END SCREEN (NON FULLSCREEN) =====
+    # ===== END SCREEN =====
     if state["game_over"] or state["game_win"]:
         dark = pygame.Surface((WIDTH, HEIGHT))
         dark.set_alpha(120)
@@ -235,9 +236,6 @@ while running:
         title = "YOU WIN" if state["game_win"] else "YOU LOSE"
         color = (0,255,0) if state["game_win"] else (255,70,70)
         screen.blit(big_font.render(title, True, color), (WIDTH//2 - 120, 60))
-
-        screen.blit(font.render(f"Final Score : {state['score']}", True, (255,255,255)),
-                    (WIDTH//2 - 80, HEIGHT//2 + 90))
 
         restart_btn = pygame.Rect(WIDTH//2 - 110, HEIGHT//2 + 150, 220, 40)
         exit_btn = pygame.Rect(WIDTH//2 - 110, HEIGHT//2 + 200, 220, 40)
